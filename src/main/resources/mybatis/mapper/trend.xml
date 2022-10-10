@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.trendRecord.mapper.TrendMapper">
+
+    <resultMap id="TrendResultMap" type="com.example.trendRecord.entity.Trend">
+        <id column="ID" property="id"/>
+        <result column="POSITION" property="position"/>
+        <result column="TITLE" property="title"/>
+        <result column="VIEWS" property="views"/>
+    </resultMap>
+
+    <resultMap id="PositionResultMap" type="com.example.trendRecord.entity.Trend">
+        <id column="ID" property="id"/>
+        <result column="POSITION" property="position"/>
+        <result column="VIEWS" property="views"/>
+        <result column="TIME" property="time"/>
+    </resultMap>
+
+    <sql id="recorddatetablename">
+        recorddates
+    </sql>
+    <sql id="tbname">
+        `T${year}${date}`
+    </sql>
+    <select id="getYears" resultType="Integer">
+        select distinct year from
+        <include refid="recorddatetablename"/>
+    </select>
+    <select id="getDatesOnYear" resultType="Integer">
+        select date from
+        <include refid="recorddatetablename"/>
+        <where>
+            year=#{year}
+        </where>
+    </select>
+    <select id="getTimesOnDate" resultType="Integer">
+        select distinct time from
+        <include refid="tbname">
+            <property name="year" value="${year}"/>
+            <property name="date" value="${date}"/>
+        </include>
+    </select>
+    <select id="getTimesFromDb" resultType="Integer">
+        select distinct time from `${dbname}`
+    </select>
+    <select id="getTrendsOnTime" resultMap="TrendResultMap">
+        select `id`, `position`, `title`, `views` from
+        <include refid="tbname">
+            <property name="year" value="${year}"/>
+            <property name="date" value="${date}"/>
+        </include>
+        <where>
+            <if test="time != null">
+                time = #{time}
+            </if>
+        </where>
+    </select>
+    <select id="getPositionsOfTrend" resultMap="PositionResultMap">
+        select `id`, `position`, `views`, `time` from
+        <include refid="tbname">
+            <property name="year" value="${year}"/>
+            <property name="date" value="${date}"/>
+        </include>
+        <where>
+            <if test="trendName != null">
+                title = #{trendName}
+            </if>
+        </where>
+    </select>
+</mapper>
