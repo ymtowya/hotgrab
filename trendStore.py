@@ -16,6 +16,7 @@ class TrendStore:
             )
         except:
             print("Unable to connect to database")
+            self.mydb = 0
             pass
         pass
 
