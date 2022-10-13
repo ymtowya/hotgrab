@@ -28,7 +28,7 @@ ROOT_XPATH = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[3]/d
 # "C:/Program Files/Google/Chrome/Application/chromedriver.exe"
 # "E:\\proj\\grab\\chromedriver\\chromedriver.exe"
 # "C:\\Program Files\\Google\\Chrome\\Application\\chromedriver.exe"
-CHROME_DRIVER_PATH = "E:\\proj\\grab\\chromedriver\\chromedriver.exe"
+CHROME_DRIVER_PATH = ".\\helper\\chromedriver\\chromedriver.exe"
 CHROME_SERVICE = Service(CHROME_DRIVER_PATH)
 SLEEP_SECS = 50 # 60
 LOCAL_TIME = time.localtime()
@@ -55,12 +55,13 @@ class weiboHotLineSpider:
         return
 
     def writeCSV(self):
-        #print(f'--开始写入{CSV_FILE_PATH}文件的操作--')
-        with open(self.csvName,'a+', encoding='UTF-8')as f:
+        # print(f'--开始写入{self.csvName}文件的操作--')
+        with open(self.csvName,'a+', encoding='UTF-8', newline='')as f:
             f_csv = csv.writer(f)
             f_csv.writerow(CSV_BLANK_ROW)
             f_csv.writerow(CSV_HEADER)
             f_csv.writerows(self.csvRows)
+            # print(self.csvRows)
         print(f'++已完成写入{self.csvName}文件的操作++')
     
     def getContent(self):
@@ -124,7 +125,7 @@ class weiboHotLineSpider:
                                 hotSpan = divs[1].find_elements(By.TAG_NAME, "span")
                                 if (len(hotSpan) > 0):
                                     tmpRow.append(self.dealHotnessString(hotSpan[0].text)) # 3 - Hotness
-                                    print(hotSpan[0].text)
+                                    # print(hotSpan[0].text)
                                 else :
                                     tmpRow.append("")
                             else:
