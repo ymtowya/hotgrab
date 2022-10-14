@@ -1,4 +1,5 @@
 from os import name
+from os.path import exists as file_exists
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
 from selenium.webdriver.chrome.service import Service
@@ -21,7 +22,9 @@ CSV_BLANK_ROW = ['', '', '', '']
 # /html/body/div[1]/div[2]/div/div[2]/div[1]/table/tbody/tr[34]/td[2]/a
 # /html/body/div[1]/div[2]/div/div[2]/div[1]/table/tbody
 # /html/body/div/div/div/div[2]/main/div/div/div/div/div/div[3]/div/section/div/div
-ROOT_XPATH = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[3]/div/section/div/div"
+# /html/body/div[1]/div[3]/div/div/div[1]/div/div/div[2]/div[1]/div[1]
+# /html/body/div[4]/main/div[3]/div/div[2]
+ROOT_XPATH = "/html/body/div[4]/main/div[3]/div/div[2]"
 # "/usr/local/bin/chromedriver"
 # "/home/ubuntu/proj/chrome/chromedriver"
 # "/usr/bin/chromedriver"
@@ -30,9 +33,9 @@ ROOT_XPATH = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[3]/d
 # "C:\\Program Files\\Google\\Chrome\\Application\\chromedriver.exe"
 # ".\\helper\\chromedriver\\chromedriver.exe"
 # "./helper/chromedriver/chromedriver"
-CHROME_DRIVER_PATH = "E:\\proj\\grab\\chromedriver\\chromedriver.exe"
+CHROME_DRIVER_PATH = "/usr/bin/chromedriver"
 CHROME_SERVICE = Service(CHROME_DRIVER_PATH)
-SLEEP_SECS = 20 # 60
+SLEEP_SECS = 15 # 60
 LOCAL_TIME = time.localtime()
 print(CHROME_DRIVER_PATH)
 myConfig = {}
@@ -58,10 +61,14 @@ class weiboHotLineSpider:
 
     def writeCSV(self):
         # print(f'--开始写入{self.csvName}文件的操作--')
+        hasFile = False
+        if file_exists(self.csvName):
+            hasFile = True
         with open(self.csvName,'a+', encoding='UTF-8', newline='')as f:
             f_csv = csv.writer(f)
-            f_csv.writerow(CSV_BLANK_ROW)
-            f_csv.writerow(CSV_HEADER)
+            if not hasFile:
+                # f_csv.writerow(CSV_BLANK_ROW)
+                f_csv.writerow(CSV_HEADER)
             f_csv.writerows(self.csvRows)
             # print(self.csvRows)
         print(f'++已完成写入{self.csvName}文件的操作++')
@@ -74,16 +81,16 @@ class weiboHotLineSpider:
             self.timeStamp = int(time.strftime("%H%M", LOCAL_TIME))
             self.csvName = CSV_FILE_PATH_PATTERN.format(date = self.dateStamp)
             driver = self.browser
-            driver.implicitly_wait(SLEEP_SECS)
-            driver.get('https://twitter.com/explore/tabs/trending')
             print("\nWork Log at " + self.nowStamp + " .\n")
+            driver.implicitly_wait(SLEEP_SECS)
+            driver.get('http://www.github.com/trending')
             print("Get Already!") # Let the user actually see something!
-            # time.sleep(SLEEP_SECS)
+            time.sleep(SLEEP_SECS)
             print("Finish sleeping!")
             tmpHotlines = driver.find_element(By.XPATH, ROOT_XPATH)
             print("HOTLINES - {}".format(1))
             if not (tmpHotlines == None):
-                self.hotlines = tmpHotlines.find_elements(By.XPATH, ".//div[contains(@data-testid,\"cellInnerDiv\")]") 
+                self.hotlines = tmpHotlines.find_elements(By.TAG_NAME, "article")
                 # driver.execute_script("window.scrollBy(0, 10000);")
                 # time.sleep(5)
                 # tmpHotLines2 = tmpHotlines[0].find_elements(By.XPATH, "//div[contains(@data-testid,\"cellInnerDiv\")]")
@@ -98,7 +105,7 @@ class weiboHotLineSpider:
             print("Web Driver Exception!")
 
     def dealHotnessString(self, inputStr):
-        return inputStr.replace("Tweets", "").replace('"', '').replace(" ", "")
+        return inputStr.replace(",", "").replace('"', '').replace(" ", "")
 
     def dealContent(self):
         try:
@@ -109,31 +116,32 @@ class weiboHotLineSpider:
                 index = 2
                 try:
                     #hotpots = self.hotlines[0].find_elements(By.TAG_NAME, "tr")
-                    for hotline in self.hotlines[2:]:
+                    for hotline in self.hotlines:
                         if (index > 31):
                             break
                         # hotline = self.browser.find_element(By.XPATH, "/html/body/div/div/div/div[2]/main/div/div/div/div/div/div[3]/div/section/div/div/div[{}]".format(i))
                         # spans = hotline.find_elements(By.TAG_NAME, "span")
-                        divs = hotline.find_elements(By.XPATH, ".//div[@dir=\"ltr\"]")
+                        divs = hotline.find_elements(By.XPATH, "./h1/a")
                         # print("WE HAVE DIV NUM - {}\n".format(len(divs)))
                         if (len(divs) > 0):
                             tmpRow = []
                             tmpRow.append("") # tmpRow.append(nowStamp)
                             tmpRow.append("{0}".format(index - 1)) # 1 - Index
-                            titleSpan = divs[0].find_elements(By.TAG_NAME, "span")
+                            titleSpan = divs # [0].find_elements(By.TAG_NAME, "span")
                             if (len(titleSpan) > 0):
                                 tmpRow.append(titleSpan[0].text) # 2 - Title
                             else :
-                                tmpRow.append("")
-                            if (len(divs) > 1):
-                                hotSpan = divs[1].find_elements(By.TAG_NAME, "span")
-                                if (len(hotSpan) > 0):
-                                    tmpRow.append(self.dealHotnessString(hotSpan[0].text)) # 3 - Hotness
-                                    # print(hotSpan[0].text)
-                                else :
-                                    tmpRow.append("")
-                            else:
-                                tmpRow.append("")
+                                tmpRow.append("---")
+
+                            tagDivs = hotline.find_elements(By.XPATH, ".//div[contains(@class,\"f6\")]")
+                            if (len(tagDivs) > 0):
+                                tagAs = tagDivs[0].find_elements(By.TAG_NAME, "a")
+                                if (len(tagAs) > 0) :
+                                    tmpRow.append(self.dealHotnessString(tagAs[0].text)) # 3 - Star
+                                else:
+                                    tmpRow.append("--")
+                            else :
+                                tmpRow.append("--") 
                             self.csvRows.append(tmpRow)
                         index += 1
                 except NoSuchElementException:
@@ -201,6 +209,7 @@ if __name__ == "__main__":
         pass
     finally:
         browser.quit()
+        print("Quit the browser anyway.")
 
 # //*[@id="pl_top_realtimehot"]/table/tbody/tr[2]/td[2]/a
 # /html/body/div[1]/div[2]/div[2]/table/tbody/tr[2]/td[2]/a

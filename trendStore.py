@@ -44,7 +44,7 @@ class TrendStore:
                     `id` INT NOT NULL AUTO_INCREMENT,\
                     `position` INT UNSIGNED NULL,\
                     `title` VARCHAR(63) NOT NULL,\
-                    `views` INT UNSIGNED NULL,\
+                    `views` VARCHAR(31) NULL,\
                     `time` INT UNSIGNED NULL,\
                     PRIMARY KEY (`id`),\
                     UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE);"\
