@@ -1,79 +1,32 @@
 Time,No.,Content,Hotness
-2022-10-14 15:10:55,,,
-,1,aws-actions / configure-aws-credentials,1386
-,2,koishijs / novelai-bot,911
-,3,holbertonschool / Betty,530
-,4,dotnet / aspnetcore,29806
-,5,smallnest / concurrency-programming-via-rust,387
-,6,Azure / azure-sdk-for-net,3994
-,7,wazuh / wazuh,5024
-,8,awesome-devblog / awesome-devblog,2889
-,9,pointfreeco / swift-composable-architecture,7159
-,10,remix-run / react-router,48450
-,11,SerenityOS / serenity,22200
-,12,AUTOMATIC1111 / stable-diffusion-webui,13016
-,13,vavkamil / awesome-bugbounty-tools,1820
-,14,facebook / create-react-app,97516
-,15,itdevbooks / pdf,18128
-,16,PaddlePaddle / PaddleNLP,5763
-,17,toss / slash,1036
-,18,justjavac / awesome-wechat-weapp,39193
-,19,facebook / folly,23349
-,20,Azure / Azure-Sentinel,2695
-,21,macrozheng / mall,61569
-,22,chakra-ui / chakra-ui,29076
-,23,IDEA-Research / detrex,612
-,24,microsoft / vscode,137851
-,25,doocs / advanced-java,67061
-2022-10-14 15:11:14,,,
-,1,aws-actions / configure-aws-credentials,1386
-,2,koishijs / novelai-bot,911
-,3,holbertonschool / Betty,530
-,4,dotnet / aspnetcore,29806
-,5,smallnest / concurrency-programming-via-rust,387
-,6,Azure / azure-sdk-for-net,3994
-,7,wazuh / wazuh,5024
-,8,awesome-devblog / awesome-devblog,2889
-,9,pointfreeco / swift-composable-architecture,7159
-,10,remix-run / react-router,48450
-,11,SerenityOS / serenity,22200
-,12,AUTOMATIC1111 / stable-diffusion-webui,13016
-,13,vavkamil / awesome-bugbounty-tools,1820
-,14,facebook / create-react-app,97516
-,15,itdevbooks / pdf,18128
-,16,PaddlePaddle / PaddleNLP,5763
-,17,toss / slash,1036
-,18,justjavac / awesome-wechat-weapp,39193
-,19,facebook / folly,23349
-,20,Azure / Azure-Sentinel,2695
-,21,macrozheng / mall,61569
-,22,chakra-ui / chakra-ui,29076
-,23,IDEA-Research / detrex,612
-,24,microsoft / vscode,137851
-,25,doocs / advanced-java,67061
-2022-10-14 15:11:49,,,
-,1,aws-actions / configure-aws-credentials,1386
-,2,koishijs / novelai-bot,911
-,3,holbertonschool / Betty,530
-,4,dotnet / aspnetcore,29806
-,5,smallnest / concurrency-programming-via-rust,387
-,6,Azure / azure-sdk-for-net,3994
-,7,wazuh / wazuh,5024
-,8,awesome-devblog / awesome-devblog,2889
-,9,pointfreeco / swift-composable-architecture,7159
-,10,remix-run / react-router,48450
-,11,SerenityOS / serenity,22200
-,12,AUTOMATIC1111 / stable-diffusion-webui,13016
-,13,vavkamil / awesome-bugbounty-tools,1820
-,14,facebook / create-react-app,97516
-,15,itdevbooks / pdf,18128
-,16,PaddlePaddle / PaddleNLP,5763
-,17,toss / slash,1037
-,18,justjavac / awesome-wechat-weapp,39193
-,19,facebook / folly,23349
-,20,Azure / Azure-Sentinel,2695
-,21,macrozheng / mall,61569
-,22,chakra-ui / chakra-ui,29076
-,23,IDEA-Research / detrex,612
-,24,microsoft / vscode,137851
-,25,doocs / advanced-java,67061
+2022-10-14 17:18:15,,,
+,1,Defiance of the Fall 7,$29.95
+,2,Failure Mode,$59.99
+,3,The Silence of Unworthy Gods,$49.99
+,4,8 Rules of Love,$23.62
+,5,Good Boundaries and Goodbyes,$25.09
+,6,The Extraordinary Life of an Ordinary Man,$28.00
+,7,He Who Fights with Monsters 8,$59.99
+,8,The Light We Carry,$35.00
+,9,The Boys from Biloxi,$35.00
+,10,"Friends, Lovers, and the Big Terrible Thing",$25.51
+,11,No Plan B,$35.00
+,12,Desert Star,$30.79
+,13,It Starts with Us,$23.62
+,14,The Creative Act,$31.50
+,15,"If This Book Exists, You're in the Wrong Universe",$24.95
+,16,Marshal Arcane,$59.99
+,17,Peril in Paris,$19.95
+,18,Courtiers,$25.51
+,19,Beyond the Wand,$29.65
+,20,Sky World,$44.99
+,21,A World of Curiosities,$31.18
+,22,Charm,$24.49
+,23,"Madly, Deeply",$31.18
+,24,Demons of Good and Evil,$38.50
+,25,Distant Horizon,$39.99
+,26,Gleanings,$22.67
+,27,Only the Dead,$23.62
+,28,Damaged Shadows,$19.95
+,29,A Fearful Symmetry,$49.99
+,30,Voodoo Warfare,$44.99
