@@ -82,19 +82,17 @@ class weiboHotLineSpider:
             self.csvName = CSV_FILE_PATH_PATTERN.format(date = self.dateStamp)
             driver = self.browser
             print("\nWork Log at " + self.nowStamp + " .\n")
+            time.sleep(10)
+            print("Finish sleeping! - 0")
             driver.implicitly_wait(SLEEP_SECS)
             driver.get('http://www.github.com/trending')
             print("Get Already!") # Let the user actually see something!
             time.sleep(SLEEP_SECS)
-            print("Finish sleeping!")
+            print("Finish sleeping! - 1")
             tmpHotlines = driver.find_element(By.XPATH, ROOT_XPATH)
             print("HOTLINES - {}".format(1))
             if not (tmpHotlines == None):
                 self.hotlines = tmpHotlines.find_elements(By.TAG_NAME, "article")
-                # driver.execute_script("window.scrollBy(0, 10000);")
-                # time.sleep(5)
-                # tmpHotLines2 = tmpHotlines[0].find_elements(By.XPATH, "//div[contains(@data-testid,\"cellInnerDiv\")]")
-                # self.hotlines.extend(tmpHotLines2[-6:])
                 print("WE FOUND DIV OF NUM - {}\n".format(len(self.hotlines)))
             else :
                 print("ERROR! HOTLINES LESS THAN 1\n")
@@ -119,10 +117,7 @@ class weiboHotLineSpider:
                     for hotline in self.hotlines:
                         if (index > 31):
                             break
-                        # hotline = self.browser.find_element(By.XPATH, "/html/body/div/div/div/div[2]/main/div/div/div/div/div/div[3]/div/section/div/div/div[{}]".format(i))
-                        # spans = hotline.find_elements(By.TAG_NAME, "span")
                         divs = hotline.find_elements(By.XPATH, "./h1/a")
-                        # print("WE HAVE DIV NUM - {}\n".format(len(divs)))
                         if (len(divs) > 0):
                             tmpRow = []
                             tmpRow.append("") # tmpRow.append(nowStamp)
@@ -188,13 +183,13 @@ if __name__ == "__main__":
         chromeOptions.add_argument("--disable-setuid-sandbox") 
 
         chromeOptions.add_argument("--remote-debugging-port=9222")  # this
-        chromeOptions.add_argument("--window-size=2560,14400") # size
+        # chromeOptions.add_argument("--window-size=2560,14400") # size
         chromeOptions.add_argument("--lang=en")
 
         chromeOptions.add_argument("--disable-dev-shm-using") 
         chromeOptions.add_argument("--disable-extensions") 
         chromeOptions.add_argument("--disable-gpu")
-        chromeOptions.add_argument("start-maximized")
+        # chromeOptions.add_argument("start-maximized")
         chromeOptions.add_argument("disable-infobars")
         chromeOptions.headless = True
         # chromeOptions.add_argument(r"user-data-dir=.\cookies\\test") 
@@ -210,12 +205,3 @@ if __name__ == "__main__":
     finally:
         browser.quit()
         print("Quit the browser anyway.")
-
-# //*[@id="pl_top_realtimehot"]/table/tbody/tr[2]/td[2]/a
-# /html/body/div[1]/div[2]/div[2]/table/tbody/tr[2]/td[2]/a
-# /html/body/div[1]/div[2]/div[2]/table/tbody/tr[3]/td[2]/a
-# /html/body/div[1]/div[2]/div[2]/table/tbody/tr[1]
-
-# search_box.send_keys('ChromeDriver')
-
-# search_box.submit()
