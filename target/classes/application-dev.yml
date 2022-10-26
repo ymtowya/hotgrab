@@ -1,0 +1,23 @@
+server:
+  port: 8073
+
+spring:
+  datasource:
+
+    url: jdbc:mysql://127.0.0.1:3309/ghtrends1?characterEncoding=UTF-8
+    # jdbc:mysql://localhost:3307/weibotrends?characterEncoding=UTF-8
+    username: whoever
+    password: 123456
+    # driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+
+  thymeleaf:
+    default_encoding: StandardCharsets.UTF8
+    default_prefix: classpath:/templates/
+    default_suffix: .html
+
+mybatis:
+  config-locations: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  type-aliases-package: com.example.trendRecord.entity
+

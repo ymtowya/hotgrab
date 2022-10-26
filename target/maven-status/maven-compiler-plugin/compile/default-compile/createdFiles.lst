@@ -1,0 +1,8 @@
+com\example\trendRecord\service\TrendService.class
+com\example\trendRecord\controller\TrendListController.class
+com\example\trendRecord\entity\TimeLabel.class
+com\example\trendRecord\entity\impl\TimeLabelImpl.class
+com\example\trendRecord\TrendRecordApplication.class
+com\example\trendRecord\mapper\TrendMapper.class
+com\example\trendRecord\entity\Trend.class
+com\example\trendRecord\service\impl\TrendServiceImpl.class
