@@ -3,15 +3,15 @@
 
 from os import name
 from os.path import exists as file_exists
-from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException, WebDriverException
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
+from bs4 import BeautifulSoup
+from lxml import etree
+import urllib3 as urllib
 import time
 import csv
 from trend import Trend
 from trendStore import TrendStore
 import re
+import requests
 
 CSV_FILE_PATH_PATTERN = "./result/result{date}.csv"
 CSV_HEADER = ['Time',
@@ -19,28 +19,14 @@ CSV_HEADER = ['Time',
               'Content',
               'Hotness']
 CSV_BLANK_ROW = ['', '', '', '']
-# /html/body/div[1]/div[2]/div/div[2]/div[1]/table/tbody/tr[4]/td[2]/a
-# /html/body/div[1]/div[2]/div[2]/table/tbody/tr[5]/td[2]/a
-# /html/body/div[1]/div[2]/div/div[2]/div[1]/table/tbody/tr[16]/td[2]/a
-# /html/body/div[1]/div[2]/div/div[2]/div[1]/table/tbody/tr[34]/td[2]/a
-# /html/body/div[1]/div[2]/div/div[2]/div[1]/table/tbody
-# /html/body/div/div/div/div[2]/main/div/div/div/div/div/div[3]/div/section/div/div
-# /html/body/div[1]/div[3]/div/div/div[1]/div/div/div[2]/div[1]/div[1]
-# /html/body/div[4]/main/div[3]/div/div[2]
 ROOT_XPATH = "/html/body/div[4]/main/div[3]/div/div[2]"
-# "/usr/local/bin/chromedriver"
-# "/home/ubuntu/proj/chrome/chromedriver"
-# "/usr/bin/chromedriver"
-# "C:/Program Files/Google/Chrome/Application/chromedriver.exe"
-# "E:\\proj\\grab\\chromedriver\\chromedriver.exe"
-# "C:\\Program Files\\Google\\Chrome\\Application\\chromedriver.exe"
-# ".\\helper\\chromedriver\\chromedriver.exe"
-# "./helper/chromedriver/chromedriver"
-CHROME_DRIVER_PATH = "/usr/bin/chromedriver"
-CHROME_SERVICE = Service(CHROME_DRIVER_PATH)
-SLEEP_SECS = 15 # 60
+REQ_HEADERS = ({'User-Agent':
+			'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 \
+			(KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36',\
+			'Accept-Language': 'en-US, en;q=0.5'})
+SLEEP_SECS = 10 # 60
 LOCAL_TIME = time.localtime()
-print(CHROME_DRIVER_PATH)
+# print(CHROME_DRIVER_PATH)
 myConfig = {}
 myConfig['dbname'] = "ghtrends1" # "demo"
 myConfig['date'] = time.strftime("%Y%m%d", LOCAL_TIME)
@@ -50,8 +36,7 @@ myConfig['user'] = "doitall"
 myConfig['password'] = "fromhereto123"
 
 class weiboHotLineSpider:
-    def __init__(self, browser, store):
-        self.browser = browser
+    def __init__(self, store):
         self.csvRows = []
         self.hotlines = []
         self.nowStamp = ""
@@ -83,20 +68,18 @@ class weiboHotLineSpider:
             self.dateStamp = time.strftime("%Y%m%d", LOCAL_TIME)
             self.timeStamp = int(time.strftime("%H%M", LOCAL_TIME))
             self.csvName = CSV_FILE_PATH_PATTERN.format(date = self.dateStamp)
-            driver = self.browser
             print("\nWork Log at " + self.nowStamp + " .\n")
-            time.sleep(10)
-            print("Finish sleeping! - 0")
-            driver.implicitly_wait(SLEEP_SECS)
-            driver.refresh()
-            driver.get("http://www.github.com/trending")
+            url = "http://www.github.com/trending"
+            
+            webpage = requests.get(url, headers=REQ_HEADERS)
             print("Get Already!") # Let the user actually see something!
             time.sleep(SLEEP_SECS)
             print("Finish sleeping! - 1")
-            tmpHotlines = driver.find_element(By.XPATH, ROOT_XPATH)
-            print("HOTLINES - {}".format(1))
-            if not (tmpHotlines == None):
-                self.hotlines = tmpHotlines.find_elements(By.TAG_NAME, "article")
+            soup = BeautifulSoup(webpage.content, "html.parser")
+            dom = etree.HTML(str(soup))
+            articles = dom.xpath('//article[@class="Box-row"]')
+            if not (articles == None):
+                self.hotlines = articles
                 print("WE FOUND DIV OF NUM - {}\n".format(len(self.hotlines)))
             else :
                 print("ERROR! HOTLINES LESS THAN 1\n")
@@ -121,24 +104,19 @@ class weiboHotLineSpider:
                 index = 1
                 try:
                     #hotpots = self.hotlines[0].find_elements(By.TAG_NAME, "tr")
-                    for hotline in self.hotlines:
+                    for article in self.hotlines:
                         if (index > 30):
                             break
-                        divs = hotline.find_elements(By.XPATH, "./h1/a")
-                        if (len(divs) > 0):
-                            indexStr = "{0}".format(index)
-                            titleStr = "---"
-                            hotnessStr = "0"
-
-                            titleSpan = divs # [0].find_elements(By.TAG_NAME, "span")
-                            if (len(titleSpan) > 0):
-                                titleStr = titleSpan[0].text.replace(',', '')
-
-                            tagDivs = hotline.find_elements(By.XPATH, ".//div[contains(@class,\"f6\")]")
-                            if (len(tagDivs) > 0):
-                                tagAs = tagDivs[0].find_elements(By.TAG_NAME, "a")
-                                if (len(tagAs) > 0) :
-                                    hotnessStr = self.dealHotnessString(tagAs[0].text)
+                        indexStr = "{0}".format(index)
+                        titleStr = "---"
+                        hotnessStr = "0"
+                        
+                        atag = article.xpath('./h1/a')
+                        startTag = article.xpath('./div')[1].xpath('./a')
+                        
+                        if (len(atag) > 0 and len(startTag) > 0):
+                            titleStr = (''.join(atag[0].itertext())).strip().replace(' ', '').replace('\n', '')
+                            hotnessStr = self.dealHotnessString((''.join(startTag[0].itertext())).strip().replace(' ', '').replace('\n', ''))
 
                             tmpRow = []
                             tmpRow.append("") # tmpRow.append(nowStamp)
@@ -154,8 +132,6 @@ class weiboHotLineSpider:
                     print("Fetch ERROR! Happening on index - {}".format(1352))
                     pass
                 finally:
-                    # self.browser.delete_all_cookies()
-                    # self.browser.quit()
                     self.writeCSV()
                     pass
             else:
@@ -175,7 +151,7 @@ class weiboHotLineSpider:
         try:
             self.getContent()
             self.dealContent()
-            # self.storeContent()
+            self.storeContent()
         finally:
             pass
 
@@ -186,32 +162,13 @@ class weiboHotLineSpider:
 if __name__ == "__main__":
 
     try:
-
-        chromeOptions = webdriver.ChromeOptions() 
-        chromeOptions.add_experimental_option("prefs", {"profile.managed_default_content_settings.images": 2}) 
-        chromeOptions.add_argument("--no-sandbox") 
-        chromeOptions.add_argument('--headless')
-        chromeOptions.add_argument("--disable-setuid-sandbox") 
-
-        chromeOptions.add_argument("--remote-debugging-port=9222")  # this
-        # chromeOptions.add_argument("--window-size=2560,14400") # size
-        chromeOptions.add_argument("--lang=en")
-
-        chromeOptions.add_argument("--disable-dev-shm-using") 
-        chromeOptions.add_argument("--disable-extensions") 
-        chromeOptions.add_argument("--disable-gpu")
-        # chromeOptions.add_argument("start-maximized")
-        chromeOptions.add_argument("disable-infobars")
-        chromeOptions.headless = True
-        # chromeOptions.add_argument(r"user-data-dir=.\cookies\\test") 
-
-        browser = webdriver.Chrome(service=CHROME_SERVICE, options=chromeOptions, service_args=["--verbose", "--log-path=./logs/log.txt"])
         myStore = TrendStore(myConfig)
-        mySpider = weiboHotLineSpider(browser, myStore)
+        mySpider = weiboHotLineSpider(myStore)
         mySpider.run()
     except NoSuchElementException:
         print("Something weird happened.")
         pass
     finally:
-        browser.quit()
-        print("Quit the browser anyway.")
+        pass
+        # browser.quit()
+        # print("Quit the browser anyway.")

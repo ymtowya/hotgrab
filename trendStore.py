@@ -5,25 +5,48 @@ class TrendStore:
     def __init__(self, config) -> None:
         self.dbname = config['dbname']
         self.date = config['date']
+        self.host = config['host']
+        self.port = config['port']
+        self.user = config['user']
+        self.password = config['password']
+        self.mydb = 0
+        pass
 
+    def __del__(self):
+        if self.mydb:
+            pass
+            # self.mydb.close()
+        pass
+    
+    def connect(self):
         try:
             self.mydb = pymysql.connect(
-                host=config['host'],       # 数据库主机地址
-                port=config['port'],
-                user=config['user'],    # 数据库用户名
-                password=config['password'],   # 数据库密码
+                host=self.host,       # 数据库主机地址
+                port=self.port,
+                user=self.user,    # 数据库用户名
+                password=self.password,   # 数据库密码
                 database=self.dbname,     
             )
         except:
             print("Unable to connect to database")
             self.mydb = 0
             pass
-        pass
 
-    def __del__(self):
-        if self.mydb:
-            self.mydb.close()
-        pass
+    def operate(self, trends, timestamp):
+        with pymysql.connect(
+                host=self.host,       # 数据库主机地址
+                port=self.port,
+                user=self.user,    # 数据库用户名
+                password=self.password,   # 数据库密码
+                database=self.dbname,     
+            ) as mydbinstance:
+            self.mydb = mydbinstance
+            if not self.checkTable():
+                self.createAndLog()
+            if self.insertTrends(trends, timestamp):
+                print("INSERT SUCCESS INTO DBs")
+                return True
+            return False
 
     def getTbName(self):
         return 'T' + self.date
@@ -43,8 +66,8 @@ class TrendStore:
         sqlStrCreateTable = "CREATE TABLE `{dbname}`.`{tbname}` (\
                     `id` INT NOT NULL AUTO_INCREMENT,\
                     `position` INT UNSIGNED NULL,\
-                    `title` VARCHAR(63) NOT NULL,\
-                    `views` VARCHAR(31) NULL,\
+                    `title` VARCHAR(99) NOT NULL,\
+                    `views` INTEGER NULL,\
                     `time` INT UNSIGNED NULL,\
                     PRIMARY KEY (`id`),\
                     UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE);"\

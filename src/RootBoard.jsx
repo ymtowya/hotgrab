@@ -52,7 +52,7 @@ function RootBoard(props) {
         <Router>
             <div id="wholeboard">
                 <div id="upbgboard">
-                    <p> Weibo Hot Topics Record 在这里，记录中国</p>
+                    <p> Github Trending Record </p>
                 </div>
                 <div id="routes">
                     <Routes>                        

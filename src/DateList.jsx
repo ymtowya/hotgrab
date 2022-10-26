@@ -70,14 +70,14 @@ function DateList(props) {
                 <tbody>
                 <tr>
                     <th>
-                        Date (MM/dd)
+                        Date (MM-dd)
                     </th>
                 </tr>
                 {dates.map((item, index) => {
                     return (<tr key={index}>
                                 <td>
                                     <button className="btn btn-default" href="" onClick={myDateClick} value={item}>
-                                        {getMonth(item)}月 {getDay(item)}日
+                                        {getMonth(item)} - {getDay(item)}
                                     </button>
                                 </td>
                             </tr>);

@@ -52,7 +52,7 @@ function TrendDisplay(props) {
     const getOption = () => {
         return {
             title: {
-                text: '热搜榜位图',
+                text: 'Repo Position Graph',
                 subtext: '#' + trendTitle + '#',
             },
             tooltip : {
