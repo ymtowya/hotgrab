@@ -30,8 +30,8 @@ LOCAL_TIME = time.localtime()
 myConfig = {}
 myConfig['dbname'] = "ghtrends1" # "demo"
 myConfig['date'] = time.strftime("%Y%m%d", LOCAL_TIME)
-myConfig['host'] = "127.0.0.7" #"localhost"
-myConfig['port'] = 3209 # 3306
+myConfig['host'] = "127.0.0.1" #"localhost"
+myConfig['port'] = 3309 # 3306
 myConfig['user'] = "doitall"
 myConfig['password'] = "fromhereto123"
 

@@ -14,7 +14,7 @@
             <!--dataSource 指连接源配置，POOLED是JDBC连接对象的数据源连接池的实现-->
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql://localhost:3307/weibotrends?characterEncoding=UTF-8"/>
+                <property name="url" value="jdbc:mysql://127.0.0.1:3309/ghtrends1?characterEncoding=UTF-8"/>
                 <property name="username" value="whoever"/>
                 <property name="password" value="123456"/>
             </dataSource>
